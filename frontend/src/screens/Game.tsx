@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/Button";
 import { ChessBoard } from "../components/ChessBoard";
 import { useSocket } from "../hooks/useSockte";
-import { Chess } from "chess.js";
+import { Chess, Color } from "chess.js";
 
 export const INIT_GAME = "init_game";
 export const MOVE = "move";
@@ -13,6 +13,7 @@ export default function Game() {
   const [chess, setChess] = useState<Chess | null>(new Chess());
   const [board, setBoard] = useState(chess?.board());
   const [started, setStarted] = useState(false);
+  const [color, setColor] = useState<Color | null>(null);
 
   useEffect(() => {
     if (!socket) return;
@@ -24,6 +25,7 @@ export default function Game() {
         case INIT_GAME:
           setChess(new Chess());
           setBoard(chess?.board());
+          setColor(message.payload.color);
           return;
 
         case MOVE:
@@ -50,6 +52,7 @@ export default function Game() {
             socket={socket}
             chess={chess}
             setBoard={setBoard}
+            color={color}
           />
         </div>
         <div className="col-span-2  w-full">

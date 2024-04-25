@@ -20,7 +20,7 @@ export class Game {
       JSON.stringify({
         type: INIT_GAME,
         payload: {
-          color: "white",
+          color: "w",
         },
       })
     );
@@ -28,7 +28,7 @@ export class Game {
       JSON.stringify({
         type: INIT_GAME,
         payload: {
-          color: "black",
+          color: "b",
         },
       })
     );

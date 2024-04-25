@@ -7,6 +7,7 @@ export const ChessBoard = ({
   socket,
   chess,
   setBoard,
+  color,
 }: {
   board:
     | ({
@@ -27,19 +28,23 @@ export const ChessBoard = ({
       | undefined
     >
   >;
+  color: Color | null;
 }) => {
   const [from, setFrom] = useState<Square | null>(null);
+
+  const isFlipped = color === "b";
 
   return (
     <div className="text-white-200">
       {board &&
-        board.map((row, i) => {
+        board !== undefined &&
+        (isFlipped ? board.slice().reverse() : board).map((row, i) => {
           return (
             <div key={i} className="flex">
               {row.map((square, j) => {
                 const squareRepresentation = (String.fromCharCode(
                   97 + (j % 8)
-                ) + (8 - i).toString()) as Square;
+                ) + (isFlipped ? i + 1 : 8 - i).toString()) as Square;
                 return (
                   <div
                     onClick={() => {
