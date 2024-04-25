@@ -1,10 +1,12 @@
-import { Color, PieceSymbol, Square } from "chess.js";
+import { Chess, Color, PieceSymbol, Square } from "chess.js";
 import { useState } from "react";
 import { MOVE } from "../screens/Game";
 
 export const ChessBoard = ({
   board,
   socket,
+  chess,
+  setBoard,
 }: {
   board:
     | ({
@@ -14,6 +16,17 @@ export const ChessBoard = ({
       } | null)[][]
     | undefined;
   socket: WebSocket;
+  chess: Chess | null;
+  setBoard: React.Dispatch<
+    React.SetStateAction<
+      | ({
+          square: Square;
+          type: PieceSymbol;
+          color: Color;
+        } | null)[][]
+      | undefined
+    >
+  >;
 }) => {
   const [from, setFrom] = useState<Square | null>(null);
 
@@ -24,21 +37,35 @@ export const ChessBoard = ({
           return (
             <div key={i} className="flex">
               {row.map((square, j) => {
+                const squareRepresentation = (String.fromCharCode(
+                  97 + (j % 8)
+                ) + (8 - i).toString()) as Square;
                 return (
                   <div
                     onClick={() => {
                       if (!from) {
-                        setFrom(square ? square.square : null);
+                        setFrom(squareRepresentation);
                       } else {
                         socket.send(
                           JSON.stringify({
                             type: MOVE,
                             move: {
                               from,
-                              to: square?.square, //to is null because square is null
+                              to: squareRepresentation,
                             },
                           })
                         );
+                        console.log({
+                          from,
+                          to: squareRepresentation,
+                        });
+                        try {
+                          chess?.move({ from, to: squareRepresentation });
+                          setBoard(chess?.board());
+                        } catch (err) {
+                          console.error(err);
+                        }
+
                         setFrom(null);
                       }
                     }}
@@ -47,8 +74,16 @@ export const ChessBoard = ({
                       (i + j) % 2 === 0 ? "bg-green-500" : "bg-white"
                     }`}
                   >
-                    <div className="w-full h-full flex justify-center items-center">
-                      {square ? square.type : ""}
+                    <div className="w-full h-full flex justify-center items-center cursor-pointer">
+                      {square ? (
+                        <img
+                          src={`${
+                            square.color == "b"
+                              ? `${square?.type?.toUpperCase()} copy`
+                              : square?.type
+                          }.png`}
+                        />
+                      ) : null}
                     </div>
                   </div>
                 );
