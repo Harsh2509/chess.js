@@ -1,0 +1,9 @@
+# terminals
+terminals:
+  [
+    "cd backend1 && npm i && tsc -b && node ./dist/index.js",
+    "cd frontend && npm i && npm run dev",
+  ]
+# other config
+tabs: ["./backend/src/index.ts", "./backend/src/GameManager.ts", "./backend/src/Game.ts"];
+run-button: clear && cd ~/code/backend1 && tsc -b && node ./dist/index.js
