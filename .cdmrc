@@ -7,8 +7,8 @@ terminals:
 # other config
 tabs:
   [
-    "./backend/src/index.ts",
-    "./backend/src/GameManager.ts",
-    "./backend/src/Game.ts",
+    "./backend1/src/index.ts",
+    "./backend1/src/GameManager.ts",
+    "./backend1/src/Game.ts",
   ]
 run-button: clear && cd ~/code/backend1 && tsc -b && node ./dist/index.js
